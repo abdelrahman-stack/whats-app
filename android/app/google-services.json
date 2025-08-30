@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "432625906594",
+    "project_id": "whatsapp-messenegr-fca52",
+    "storage_bucket": "whatsapp-messenegr-fca52.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432625906594:android:3f6d74e049a43591a738fb",
+        "android_client_info": {
+          "package_name": "com.example.whats_app_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYcuQda8AexCyEqnrel3yNstRmDWfW7tU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
