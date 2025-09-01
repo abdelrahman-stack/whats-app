@@ -6,7 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whats_app_clone/core/func/on_generate_route.dart';
 import 'package:whats_app_clone/core/theme/dark_theme.dart';
 import 'package:whats_app_clone/core/theme/light_theme.dart';
-import 'package:whats_app_clone/feature/auth/views/user_info_view.dart';
+import 'package:whats_app_clone/feature/welcome/views/welcome_view.dart';
 import 'package:whats_app_clone/firebase_options.dart';
 
 void main() async {
@@ -33,7 +33,7 @@ class WhatsApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       onGenerateRoute: onGenerateRoute,
-      initialRoute: UserInfoView.routeName,
+      initialRoute: WelcomeView.routeName,
     );
   }
 }

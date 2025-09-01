@@ -1,13 +1,17 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whats_app_clone/core/extension/custom_theme_extension.dart';
 import 'package:whats_app_clone/core/helper/show_alert_dialog.dart';
+import 'package:whats_app_clone/core/models/user_model.dart';
 import 'package:whats_app_clone/core/services/supabase_storage_service.dart';
 import 'package:whats_app_clone/core/utils/app_colors.dart';
 import 'package:whats_app_clone/core/widgets/custom_elevated_button.dart';
 import 'package:whats_app_clone/core/widgets/custom_icon_button.dart';
+import 'package:whats_app_clone/feature/auth/views/home_view.dart';
 import 'package:whats_app_clone/feature/auth/views/image_picker_view.dart';
 import 'package:whats_app_clone/feature/auth/views/widgets/custom_text_form_field.dart';
 
@@ -25,6 +29,7 @@ class _UserInfoViewState extends State<UserInfoView> {
   String? imageUrl;
   Uint8List? imageGallery;
   final storage = SupabaseStorageService();
+  final nameController = TextEditingController();
 
   Future<void> pickImageFromGallery() async {
     Navigator.pop(context);
@@ -215,6 +220,7 @@ class _UserInfoViewState extends State<UserInfoView> {
                   const SizedBox(width: 20),
                   Expanded(
                     child: CustomTextFormField(
+                      controller: nameController,
                       hintText: 'Type your name here',
                       textAlign: TextAlign.left,
                       autofocus: true,
@@ -235,7 +241,65 @@ class _UserInfoViewState extends State<UserInfoView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: CustomElevatedButton(
         text: 'NEXT',
-        onPressed: () {},
+        onPressed: () async {
+          final name = nameController.text.trim();
+
+          if (name.isEmpty) {
+            showAlertDialog(
+              context: context,
+              message: "Please enter your name",
+            );
+            return;
+          }
+
+          final user = FirebaseAuth.instance.currentUser;
+          if (user == null) {
+            showAlertDialog(context: context, message: "No user logged in");
+            return;
+          }
+
+          try {
+            final storage = SupabaseStorageService();
+            String? imageUrl;
+
+            if (imageCamera != null) {
+              imageUrl = await storage.uploadFile(
+                bucket: "profiles",
+
+                file: imageCamera!,
+                userId: user.uid,
+              );
+            } else if (imageGallery != null) {
+              imageUrl = await storage.uploadBytes(
+                bucket: "profiles",
+                bytes: imageGallery!,
+                userId: user.uid,
+                fileExtension: "jpg",
+              );
+            }
+
+            imageUrl ??= "https://your-default-image.png";
+
+            final newUser = UserModel(
+              id: user.uid,
+              name: name,
+              phoneNumber: user.phoneNumber ?? '',
+              groupId: [],
+              photoUrl: imageUrl,
+              isOnline: true,
+            );
+
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .set(newUser.toMap());
+
+            Navigator.pushReplacementNamed(context, HomeView.routeName);
+          } catch (e) {
+            showAlertDialog(context: context, message: e.toString());
+          }
+        },
+
         buttonWidth: 90,
       ),
     );

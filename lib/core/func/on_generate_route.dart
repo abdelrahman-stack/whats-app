@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whats_app_clone/feature/auth/views/home_view.dart';
 import 'package:whats_app_clone/feature/auth/views/login_view.dart';
 import 'package:whats_app_clone/feature/auth/views/user_info_view.dart';
 import 'package:whats_app_clone/feature/auth/views/verification_view.dart';
@@ -29,6 +30,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
     case UserInfoView.routeName:
       return MaterialPageRoute(builder: (context) => const UserInfoView());
+        case HomeView.routeName:
+      return MaterialPageRoute(builder: (context) => const HomeView());
+
 
     default:
       return MaterialPageRoute(builder: (context) => const Scaffold());

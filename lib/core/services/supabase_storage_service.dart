@@ -17,12 +17,13 @@ class SupabaseStorageService {
   }) async {
     try {
       final ext = file.path.split('.').last;
-      final path = 'profiles/$userId/${_makeFileName("profile", ext)}';
+      final path = '$userId/${_makeFileName("profile", ext)}';
 
       await _client.storage.from(bucket).upload(path, file);
 
       return _client.storage.from(bucket).getPublicUrl(path);
     } catch (e) {
+      print("❌ UploadFile Error: $e");
       return null;
     }
   }
@@ -34,13 +35,13 @@ class SupabaseStorageService {
     required String fileExtension,
   }) async {
     try {
-      final path =
-          'profiles/$userId/${_makeFileName("profile", fileExtension)}';
+      final path = '$userId/${_makeFileName("profile", fileExtension)}';
 
       await _client.storage.from(bucket).uploadBinary(path, bytes);
 
       return _client.storage.from(bucket).getPublicUrl(path);
     } catch (e) {
+      print("❌ UploadBytes Error: $e");
       return null;
     }
   }
